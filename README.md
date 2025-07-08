@@ -51,7 +51,7 @@ Proje, etkinlik ve katılımcı yönetimini pratik hale getirmek amacıyla tasar
 ### Adım Adım Kurulum  
 ```bash
 # 1. Projeyi klonlayın
-git clone https://github.com/seymatttass/EventManagment.git
+git clone https://github.com/seymatttass/EventsManagementApp.git
 cd EventManagment
 
 # 2. NuGet paketlerini yükleyin
@@ -98,4 +98,4 @@ EventManagementApp/
 ## 📞 **İletişim**
 - Email: seyyyma08@gmail.com
 - LinkedIn: https://www.linkedin.com/in/%C5%9Feyma-ta%C5%9F-642600272/
-- Project Link: https://github.com/seymatttass/EventManagment
+- Project Link: https://github.com/seymatttass/EventsManagementApp

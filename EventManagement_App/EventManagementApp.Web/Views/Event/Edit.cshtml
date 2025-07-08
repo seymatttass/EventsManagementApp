@@ -1,0 +1,82 @@
+﻿@using System.Web.Mvc
+@using System.Web.Mvc.Html
+@using System.Web.Routing
+@inherits System.Web.Mvc.WebViewPage<EventManagementApp.Data.Entities.Event>
+@{
+    ViewBag.Title = "Etkinlik Düzenle";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header bg-warning text-white">
+                    <h4><i class="fas fa-edit"></i> Etkinlik Düzenle</h4>
+                    <p class="mb-0">Etkinlik bilgilerini güncelleyebilirsiniz.</p>
+                </div>
+                <div class="card-body">
+                    @if (ViewBag.ErrorMessage != null)
+                    {
+                        <div class="alert alert-danger">
+                            <strong>Hata!</strong> @ViewBag.ErrorMessage
+                        </div>
+                    }
+
+                    @using (Html.BeginForm("Edit", "Event", FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(m => m.Id)
+                        @Html.HiddenFor(m => m.CreatedDate)
+                        @Html.HiddenFor(m => m.UpdatedDate)
+                        @Html.HiddenFor(m => m.IsActive)
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Title, "Etkinlik Başlığı", new { @class = "form-label" })
+                            @Html.TextBoxFor(m => m.Title, new { @class = "form-control", placeholder = "Etkinlik başlığını giriniz", required = "required" })
+                            @Html.ValidationMessageFor(m => m.Title, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Description, "Açıklama", new { @class = "form-label" })
+                            @Html.TextAreaFor(m => m.Description, new { @class = "form-control", rows = 4, placeholder = "Etkinlik açıklamasını giriniz (isteğe bağlı)" })
+                            @Html.ValidationMessageFor(m => m.Description, "", new { @class = "text-danger" })
+                            <small class="form-text text-muted">Maksimum 1000 karakter</small>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.EventDate, "Etkinlik Tarihi", new { @class = "form-label" })
+                                    @Html.TextBoxFor(m => m.EventDate, "{0:yyyy-MM-ddTHH:mm}", new { @class = "form-control", type = "datetime-local", required = "required" })
+                                    @Html.ValidationMessageFor(m => m.EventDate, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.EventTypeId, "Etkinlik Türü", new { @class = "form-label" })
+                                    @Html.DropDownListFor(m => m.EventTypeId, ViewBag.EventTypes as SelectList, "Seçiniz...", new { @class = "form-control", required = "required" })
+                                    @Html.ValidationMessageFor(m => m.EventTypeId, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Location, "Konum", new { @class = "form-label" })
+                            @Html.TextBoxFor(m => m.Location, new { @class = "form-control", placeholder = "Etkinlik konumunu giriniz", required = "required" })
+                            @Html.ValidationMessageFor(m => m.Location, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group text-center">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="fas fa-save"></i> Kaydet
+                            </button>
+                            <a href="@Url.Action("Index")" class="btn btn-secondary btn-lg">
+                                <i class="fas fa-times"></i> İptal
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
