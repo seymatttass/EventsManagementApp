@@ -1,4 +1,9 @@
 # 🎉 EventManagment  
+
+## 📋 Proje Geliştirme Süreci ve Notlarım
+
+Projenin başlangıçtan bitişe kadar olan geliştirme sürecini, aldığım notları ve çözüm yollarını görmek için [**Proje Dokümantasyonu**](./EventManagement_App/) klasörüne göz atabilirsiniz. Bu bölümde geliştirme aşamalarında tuttuğum detaylı notlar, öğrendiğim yeni teknolojiler ve projeyi adım adım nasıl geliştirdiğime dair bilgiler yer almaktadır.
+
 **Etkinlik ve Katılımcı Yönetim Uygulaması (.NET MVC)**  
 Bu projede, kurumsal veya sosyal etkinliklerin yönetilebildiği küçük ölçekli bir web uygulaması geliştirdim.
 Kullanıcılar, sistem üzerinden yeni etkinlikler oluşturabiliyor; bu etkinliklere katılımcılar ekleyebiliyor ve ayrıca etkinlikleri listeleyip filtreleyebiliyorlar.
