@@ -1,6 +1,6 @@
-# 🎉 EventManagment  
+#  EventManagment  
 
-## 📋 Proje Geliştirme Süreci ve Notlarım
+##  Proje Geliştirme Süreci ve Notlarım
 
 Projenin başlangıçtan bitişe kadar olan geliştirme sürecini, aldığım notları ve çözüm yollarını görmek için [**Proje Dokümantasyonu**](./notesEventManagement.png) klasörüne göz atabilirsiniz. Bu bölümde geliştirme aşamalarında tuttuğum detaylı notlar, öğrendiğim yeni teknolojiler ve projeyi adım adım nasıl geliştirdiğime dair bilgiler yer almaktadır.
 
@@ -10,15 +10,15 @@ Kullanıcılar, sistem üzerinden yeni etkinlikler oluşturabiliyor; bu etkinlik
 Ayrıca mevcut etkinlikler üzerinde düzenleme işlemleri de yapılabiliyor.
 Proje, etkinlik ve katılımcı yönetimini pratik hale getirmek amacıyla tasarlanmıştır.
 
-## 📦 Görsel İçerik
+##  Görsel İçerik
 ![Ana Sayfa Görseli](assets/homePage.png)
 
 
-## 🎬 Uygulama Demo
+##  Uygulama Demo
 <img src="assets/video.gif" alt="Uygulama Demo" width="800"/>
 
 
-## 📦 Proje İçeriği  
+##  Proje İçeriği  
 
 #### 1. Etkinlik Oluşturma  
 - Ana sayfadan **"Yeni Etkinlik Oluştur"** butonuna tıklayın  
@@ -52,7 +52,7 @@ Proje, etkinlik ve katılımcı yönetimini pratik hale getirmek amacıyla tasar
 
 ---
 
-## 🚀 Kurulum  
+##  Kurulum  
 ### Adım Adım Kurulum  
 ```bash
 # 1. Projeyi klonlayın
@@ -100,7 +100,7 @@ EventManagementApp/
 ```
 
 
-## 📞 **İletişim**
+##  **İletişim**
 - Email: seyyyma08@gmail.com
 - LinkedIn: https://www.linkedin.com/in/%C5%9Feyma-ta%C5%9F-642600272/
 - Project Link: https://github.com/seymatttass/EventsManagementApp
