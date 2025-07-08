@@ -1,0 +1,331 @@
+# =======================================================
+# Etkinlik ve Katılımcı Yönetim Uygulaması (.NET MVC)
+# Katmanlı Mimari için özel .gitignore
+# =======================================================
+
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.opendb
+*.opensdf
+*.sdf
+*.cachefile
+*.VC.db
+*.VC.VC.opendb
+*.vcxproj.filters
+
+# Build results - Tüm katmanlar için
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+build/
+bld/
+[Bb]in/
+[Oo]bj/
+
+# MSTest test Results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+*.trx
+*.coverage
+*.coveragexml
+
+# NuGet Packages
+packages/
+*.nupkg
+*.snupkg
+.nuget/
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Entity Framework - Migrations IGNORE
+Migrations/
+*Migrations/
+App_Data/Migrations/
+*.Designer.cs
+*.resx
+*Migration*.cs
+*migration*.cs
+InitialCreate.cs
+Configuration.cs
+
+# Database Files - Sadece geliştirme veritabanları
+*.mdf
+*.ldf
+*.sdf
+*.sqlite
+*.db
+*.bak
+*.backup
+App_Data/*.mdf
+App_Data/*.ldf
+
+# Connection Strings - Güvenlik için
+appsettings.json
+appsettings.Development.json
+appsettings.Production.json
+connectionstrings.config
+# Web.config ana dosyası DAHIL EDİLECEK (template olarak)
+
+# Log Files - Serilog/NLog/log4net
+*.log
+logs/
+Logs/
+LogFiles/
+[Ll]og[Ff]iles/
+*.log.*
+*.txt.log
+serilog-*.txt
+nlog-*.txt
+
+# ASP.NET MVC Temporary Files
+Temporary ASP.NET Files/
+App_Data/
+*.tmp
+*.temp
+elmah.axd
+
+# Web.config transformations
+Web.Debug.config
+Web.Release.config
+Web.*.config
+!Web.config
+
+# Razor View Engine
+*.cshtml.cs
+*.razor.cs
+
+# IIS Express
+.vs/config/applicationhost.config
+*.publishsettings
+
+# Publish Profiles
+PublishProfiles/
+*.pubxml
+*.pubxml.user
+*.publishproj
+
+# Azure
+*.azurePubxml
+.azure/
+
+# Resharper
+_ReSharper*/
+*.ReSharper
+*.DotSettings.user
+
+# TeamCity
+_TeamCity*
+
+# DotCover
+*.dotCover
+
+# NCrunch
+*.ncrunch*
+.*crunch*.local.xml
+nCrunchTemp_*
+
+# Installshield output folder
+[Ee]xpress/
+
+# DocProject
+DocProject/buildhelp/
+DocProject/Help/*.HxT
+DocProject/Help/*.HxC
+DocProject/Help/*.hhc
+DocProject/Help/*.hhk
+DocProject/Help/*.hhp
+DocProject/Help/Html2
+DocProject/Help/html
+
+# Click-Once directory
+publish/
+
+# Publish Web Output
+*.[Pp]ublish.xml
+*.azurePubxml
+*.pubxml
+*.publishproj
+
+# Windows Azure Build Output
+csx/
+*.build.csdef
+
+# Windows Store app package directory
+AppPackages/
+
+# Others
+ClientBin/
+[Ss]tyle[Cc]op.*
+~$*
+*~
+*.dbmdl
+*.dbproj.schemaview
+*.pfx
+*.publishsettings
+node_modules/
+bower_components/
+
+# RIA/Silverlight projects
+Generated_Code/
+
+# Backup & report files from converting an old project file to a newer Visual Studio version
+_UpgradeReport_Files/
+Backup*/
+UpgradeLog*.XML
+UpgradeLog*.htm
+
+# SQL Server files
+*.mdf
+*.ldf
+*.ndf
+
+# Business Intelligence projects
+*.rdl.data
+*.bim.layout
+*.bim_*.settings
+
+# Microsoft Fakes
+FakesAssemblies/
+
+# GhostDoc plugin setting file
+*.GhostDoc.xml
+
+# Node.js Tools for Visual Studio
+.ntvs_analysis.dat
+
+# Visual Studio 6 build log
+*.plg
+
+# Visual Studio 6 workspace options file
+*.opt
+
+# Visual Studio LightSwitch build output
+**/*.HTMLClient/GeneratedArtifacts
+**/*.DesktopClient/GeneratedArtifacts
+**/*.DesktopClient/ModelManifest.xml
+**/*.Server/GeneratedArtifacts
+**/*.Server/ModelManifest.xml
+_Pvt_Extensions
+
+# Paket dependency manager
+.paket/paket.exe
+paket-files/
+
+# FAKE - F# Make
+.fake/
+
+# JetBrains Rider
+.idea/
+*.sln.iml
+
+# CodeRush
+.cr/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# Temporary files
+*.tmp
+*.temp
+*.cache
+*~
+*.swp
+*.swo
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE - VSCode
+.vscode/
+*.code-workspace
+
+# Auto-generated files
+AssemblyInfo.cs
+GlobalAssemblyInfo.cs
+VersionInfo.cs
+
+# Package manager files
+package-lock.json
+yarn.lock
+
+# Webpack
+.webpack/
+
+# Coverage reports
+coverage/
+*.coverage
+*.coveragexml
+
+# StyleCop
+StyleCopReport.xml
+
+# Files built by Visual Studio
+*_i.c
+*_p.c
+*_i.h
+*.ilk
+*.meta
+*.obj
+*.pch
+*.pgc
+*.pgd
+*.rsp
+*.sbr
+*.tlb
+*.tli
+*.tlh
+*.tmp
+*.tmp_proj
+*.vspscc
+*.vssscc
+.builds
+*.pidb
+*.log
+*.svclog
+*.scc
+
+# Katmanlı Mimari - Özel dizinler
+# Presentation Layer, Business Layer, Data Access Layer
+# Bu dizinlerin içindeki bin/ ve obj/ klasörleri zaten yukarıda ignore edildi
+
+# Third-party libraries (eğer manuel eklendiyse)
+lib/
+Lib/
+Libraries/
+ThirdParty/
+
+# Documentation
+*.docx
+*.pdf
+*.pptx

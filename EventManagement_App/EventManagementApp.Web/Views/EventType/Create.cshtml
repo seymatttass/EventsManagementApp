@@ -1,0 +1,137 @@
+﻿@using System.Web.Mvc
+@using System.Web.Mvc.Html
+@using System.Web.Routing
+@inherits System.Web.Mvc.WebViewPage<EventManagementApp.Data.Entities.EventType>
+
+@{
+    ViewBag.Title = "Yeni Etkinlik Türü";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h4><i class="fas fa-plus"></i> Yeni Etkinlik Türü Oluştur</h4>
+                    <p class="mb-0">Yeni bir etkinlik türü ekleyebilirsiniz.</p>
+                </div>
+                <div class="card-body">
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                        <div class="alert alert-danger">
+                            <strong>Hata!</strong> @TempData["ErrorMessage"]
+                        </div>
+                    }
+
+                    @using (Html.BeginForm("Create", "EventType", FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Name, "Tür Adı", new { @class = "form-label" })
+                            <span class="text-danger">*</span>
+                            @Html.TextBoxFor(m => m.Name, new { @class = "form-control", placeholder = "Etkinlik türü adını giriniz", required = "required", maxlength = "100" })
+                            @Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger" })
+                            <small class="form-text text-muted">En az 2, maksimum 100 karakter</small>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Description, "Açıklama", new { @class = "form-label" })
+                            @Html.TextAreaFor(m => m.Description, new { @class = "form-control", rows = 4, placeholder = "Tür açıklamasını giriniz (isteğe bağlı)", maxlength = "500" })
+                            @Html.ValidationMessageFor(m => m.Description, "", new { @class = "text-danger" })
+                            <small class="form-text text-muted">Maksimum 500 karakter (isteğe bağlı)</small>
+                        </div>
+
+                        <div class="alert alert-info">
+                            <strong><i class="fas fa-info-circle"></i> Örnek Türler:</strong>
+                            <div class="row mt-2">
+                                <div class="col-md-6">
+                                    <ul class="list-unstyled mb-0">
+                                        <li>• Konferans</li>
+                                        <li>• Workshop</li>
+                                        <li>• Seminer</li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <ul class="list-unstyled mb-0">
+                                        <li>• Webinar</li>
+                                        <li>• Networking</li>
+                                        <li>• Panel</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group text-center">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="fas fa-save"></i> Kaydet
+                            </button>
+                            <a href="@Url.Action("Index")" class="btn btn-secondary btn-lg">
+                                <i class="fas fa-times"></i> İptal
+                            </a>
+                        </div>
+
+                        <div class="mt-3">
+                            <small class="text-muted">
+                                <span class="text-danger">*</span> işaretli alanlar zorunludur.
+                            </small>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function () {
+        'use strict';
+        window.addEventListener('load', function () {
+            var forms = document.getElementsByClassName('needs-validation');
+            var validation = Array.prototype.filter.call(forms, function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var nameInput = document.querySelector('input[name="Name"]');
+        var descInput = document.querySelector('textarea[name="Description"]');
+
+        function updateCharCount(input, maxLength, target) {
+            var remaining = maxLength - input.value.length;
+            target.textContent = remaining + ' karakter kaldı';
+            if (remaining < 20) {
+                target.style.color = 'red';
+            } else {
+                target.style.color = '';
+            }
+        }
+
+        if (nameInput) {
+            var nameCounter = document.createElement('small');
+            nameCounter.className = 'form-text text-muted';
+            nameInput.parentNode.appendChild(nameCounter);
+            nameInput.addEventListener('input', function () {
+                updateCharCount(this, 100, nameCounter);
+            });
+            updateCharCount(nameInput, 100, nameCounter);
+        }
+
+        if (descInput) {
+            var descCounter = document.createElement('small');
+            descCounter.className = 'form-text text-muted';
+            descInput.parentNode.appendChild(descCounter);
+            descInput.addEventListener('input', function () {
+                updateCharCount(this, 500, descCounter);
+            });
+            updateCharCount(descInput, 500, descCounter);
+        }
+    });
+</script>

@@ -1,0 +1,174 @@
+﻿@using System.Web.Mvc
+@using System.Web.Mvc.Html
+@using System.Web.Routing
+@inherits System.Web.Mvc.WebViewPage<EventManagementApp.Data.Entities.Event>
+
+@{
+    ViewBag.Title = "Yeni Etkinlik";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h4><i class="fas fa-plus"></i> Yeni Etkinlik Oluştur</h4>
+                    <p class="mb-0">Yeni bir etkinlik ekleyebilirsiniz.</p>
+                </div>
+                <div class="card-body">
+                    @if (ViewBag.ErrorMessage != null)
+                    {
+                        <div class="alert alert-danger">
+                            <strong>Hata!</strong> @ViewBag.ErrorMessage
+                        </div>
+                    }
+
+                    @using (Html.BeginForm("Create", "Event", FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Title, "Etkinlik Başlığı", new { @class = "form-label" })
+                            <span class="text-danger">*</span>
+                            @Html.TextBoxFor(m => m.Title, new { @class = "form-control", placeholder = "Etkinlik başlığını giriniz", required = "required", maxlength = "200" })
+                            @Html.ValidationMessageFor(m => m.Title, "", new { @class = "text-danger" })
+                            <small class="form-text text-muted">En az 3, maksimum 200 karakter</small>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Description, "Açıklama", new { @class = "form-label" })
+                            @Html.TextAreaFor(m => m.Description, new { @class = "form-control", rows = 4, placeholder = "Etkinlik açıklamasını giriniz (isteğe bağlı)", maxlength = "1000" })
+                            @Html.ValidationMessageFor(m => m.Description, "", new { @class = "text-danger" })
+                            <small class="form-text text-muted">Maksimum 1000 karakter (isteğe bağlı)</small>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.EventDate, "Etkinlik Tarihi", new { @class = "form-label" })
+                                    <span class="text-danger">*</span>
+                                    @Html.TextBoxFor(m => m.EventDate, "{0:yyyy-MM-ddTHH:mm}", new { @class = "form-control", type = "datetime-local", required = "required" })
+                                    @Html.ValidationMessageFor(m => m.EventDate, "", new { @class = "text-danger" })
+                                    <small class="form-text text-muted">Gelecek bir tarih seçiniz</small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.EventTypeId, "Etkinlik Türü", new { @class = "form-label" })
+                                    <span class="text-danger">*</span>
+                                    @Html.DropDownListFor(m => m.EventTypeId, ViewBag.EventTypes as SelectList, "Seçiniz...", new { @class = "form-control", required = "required" })
+                                    @Html.ValidationMessageFor(m => m.EventTypeId, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Location, "Konum", new { @class = "form-label" })
+                            <span class="text-danger">*</span>
+                            @Html.TextBoxFor(m => m.Location, new { @class = "form-control", placeholder = "Etkinlik konumunu giriniz", required = "required", maxlength = "300" })
+                            @Html.ValidationMessageFor(m => m.Location, "", new { @class = "text-danger" })
+                            <small class="form-text text-muted">Maksimum 300 karakter</small>
+                        </div>
+
+                        <div class="form-group text-center">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="fas fa-save"></i> Kaydet
+                            </button>
+                            <a href="@Url.Action("Index")" class="btn btn-secondary btn-lg">
+                                <i class="fas fa-times"></i> İptal
+                            </a>
+                        </div>
+
+                        <div class="mt-3">
+                            <small class="text-muted">
+                                <span class="text-danger">*</span> işaretli alanlar zorunludur.
+                            </small>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function () {
+        'use strict';
+        window.addEventListener('load', function () {
+            var forms = document.getElementsByClassName('needs-validation');
+            var validation = Array.prototype.filter.call(forms, function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var now = new Date();
+        var minDate = new Date(now.getTime() + (60 * 60 * 1000)); 
+        var minDateString = minDate.toISOString().slice(0, 16);
+        var dateInput = document.querySelector('input[type="datetime-local"]');
+
+        if (dateInput) {
+            dateInput.min = minDateString;
+
+            if (!dateInput.value) {
+                var tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                tomorrow.setHours(9, 0, 0, 0);
+                dateInput.value = tomorrow.toISOString().slice(0, 16);
+            }
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var titleInput = document.querySelector('input[name="Title"]');
+        var descInput = document.querySelector('textarea[name="Description"]');
+        var locationInput = document.querySelector('input[name="Location"]');
+
+        function updateCharCount(input, maxLength, target) {
+            var remaining = maxLength - input.value.length;
+            target.textContent = remaining + ' karakter kaldı';
+            if (remaining < 20) {
+                target.style.color = 'red';
+            } else {
+                target.style.color = '';
+            }
+        }
+
+        if (titleInput) {
+            var titleCounter = document.createElement('small');
+            titleCounter.className = 'form-text text-muted';
+            titleInput.parentNode.appendChild(titleCounter);
+            titleInput.addEventListener('input', function () {
+                updateCharCount(this, 200, titleCounter);
+            });
+            updateCharCount(titleInput, 200, titleCounter);
+        }
+
+        if (descInput) {
+            var descCounter = document.createElement('small');
+            descCounter.className = 'form-text text-muted';
+            descInput.parentNode.appendChild(descCounter);
+            descInput.addEventListener('input', function () {
+                updateCharCount(this, 1000, descCounter);
+            });
+            updateCharCount(descInput, 1000, descCounter);
+        }
+
+        if (locationInput) {
+            var locationCounter = document.createElement('small');
+            locationCounter.className = 'form-text text-muted';
+            locationInput.parentNode.appendChild(locationCounter);
+            locationInput.addEventListener('input', function () {
+                updateCharCount(this, 300, locationCounter);
+            });
+            updateCharCount(locationInput, 300, locationCounter);
+        }
+    });
+</script>

@@ -1,0 +1,509 @@
+﻿@using System.Web.Mvc
+@using System.Web.Mvc.Html
+@using System.Web.Routing
+@using System.Linq
+@inherits System.Web.Mvc.WebViewPage<IEnumerable<EventManagementApp.Data.Entities.Participant>>
+
+@{
+    ViewBag.Title = "Katılımcılar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-1">
+                <i class="fas fa-users text-primary mr-2"></i>Katılımcılar
+            </h2>
+            <p class="text-muted mb-0">Katılımcıya tıklayarak etkinliklerini görüntüleyebilirsiniz.</p>
+        </div>
+        <div>
+            <a href="@Url.Action("Index", "Home")" class="btn btn-outline-secondary mr-2">
+                <i class="fas fa-home mr-2"></i>Ana Sayfa
+            </a>
+            <a href="@Url.Action("Create", "Participant")" class="btn btn-success">
+                <i class="fas fa-user-plus mr-2"></i>Yeni Katılımcı Ekle
+            </a>
+        </div>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle mr-2"></i>@TempData["SuccessMessage"]
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle mr-2"></i>@TempData["ErrorMessage"]
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    }
+
+    <div class="card">
+        <div class="card-header bg-light">
+            <h5 class="mb-0">
+                <i class="fas fa-list mr-2"></i>Katılımcı Listesi
+                <span class="badge badge-primary">@(Model != null ? Model.Count() : 0)</span>
+            </h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="thead-light">
+                        <tr>
+                            <th><i class="fas fa-user mr-2"></i>Ad Soyad</th>
+                            <th><i class="fas fa-envelope mr-2"></i>E-posta</th>
+                            <th><i class="fas fa-phone mr-2"></i>Telefon</th>
+                            <th><i class="fas fa-calendar mr-2"></i>Kayıt Tarihi</th>
+                            <th><i class="fas fa-cogs mr-2"></i>İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Any())
+                        {
+                            foreach (var participant in Model)
+                            {
+                                <tr class="participant-row" data-participant-id="@participant.Id" style="cursor: pointer;">
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="avatar-sm bg-primary rounded-circle mr-2 d-flex align-items-center justify-content-center">
+                                                <i class="fas fa-user text-white"></i>
+                                            </div>
+                                            <div>
+                                                <strong>@participant.FirstName @participant.LastName</strong>
+                                                <i class="fas fa-chevron-down ml-2 expand-icon text-muted" id="icon-@participant.Id"></i>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <a href="mailto:@participant.Email" class="text-primary">
+                                            @participant.Email
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a href="tel:@participant.Phone" class="text-primary">
+                                            @participant.Phone
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <span class="text-muted">
+                                            @participant.CreatedDate.ToString("dd.MM.yyyy HH:mm")
+                                        </span>
+                                    </td>
+                                    <td onclick="event.stopPropagation();">
+                                        <div class="btn-group" role="group">
+                                            <button type="button"
+                                                    class="btn btn-sm btn-outline-success"
+                                                    title="Etkinliklere Ekle"
+                                                    onclick="openAddToEventsModal(@participant.Id, '@participant.FirstName @participant.LastName')">
+                                                <i class="fas fa-plus"></i>
+                                            </button>
+
+                                            @using (Html.BeginForm("DeleteConfirmed", "Participant", FormMethod.Post, new { style = "display: inline;" }))
+                                            {
+                                                @Html.AntiForgeryToken()
+                                                @Html.Hidden("id", participant.Id)
+                                                <button type="submit" class="btn btn-sm btn-outline-danger"
+                                                        onclick="return confirm('[@participant.FirstName @participant.LastName] katılımcısını silmek istediğinizden emin misiniz?')"
+                                                        title="Sil">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            }
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <tr class="event-details-row" id="events-@participant.Id" style="display: none;">
+                                    <td colspan="5">
+                                        <div class="card border-0 bg-light">
+                                            <div class="card-body">
+                                                <h6 class="mb-3">
+                                                    <i class="fas fa-calendar-alt text-primary mr-2"></i>
+                                                    @participant.FirstName @participant.LastName'nin Etkinlikleri
+                                                </h6>
+
+                                                <div class="loading-events text-center" id="loading-@participant.Id">
+                                                    <i class="fas fa-spinner fa-spin mr-2"></i>Etkinlikler yükleniyor...
+                                                </div>
+
+                                                <div class="events-container" id="events-container-@participant.Id" style="display: none;">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="5" class="text-center py-5">
+                                    <i class="fas fa-users text-muted" style="font-size: 3rem;"></i>
+                                    <h5 class="text-muted mt-3 mb-3">Henüz Katılımcı Bulunmamaktadır</h5>
+                                    <p class="text-muted mb-4">İlk katılımcıyı eklemek için aşağıdaki butonu kullanın.</p>
+                                    <a href="@Url.Action("Create", "Participant")" class="btn btn-success">
+                                        <i class="fas fa-user-plus mr-2"></i>İlk Katılımcıyı Ekle
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addToEventsModal" tabindex="-1" role="dialog" aria-labelledby="addToEventsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addToEventsModalLabel">
+                    <i class="fas fa-plus-circle text-success mr-2"></i>
+                    Etkinliklere Ekle
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p><strong id="selectedParticipantName">Katılımcı Adı</strong> kişisini aşağıdaki etkinliklere ekleyebilirsiniz:</p>
+
+                <div class="text-center" id="eventsLoading" style="display: none;">
+                    <i class="fas fa-spinner fa-spin mr-2"></i>Etkinlikler yükleniyor...
+                </div>
+
+                <div id="eventsContainer">
+                </div>
+
+                <div id="selectedEventsInfo" style="display: none;">
+                    <hr>
+                    <h6><i class="fas fa-check text-success mr-2"></i>Seçili Etkinlikler:</h6>
+                    <ul id="selectedEventsList" class="list-unstyled">
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                    <i class="fas fa-times mr-2"></i>İptal
+                </button>
+                <button type="button" class="btn btn-success" id="confirmAddEvents" disabled>
+                    <i class="fas fa-check mr-2"></i>Seçili Etkinliklere Ekle
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Html.AntiForgeryToken()
+
+<style>
+    .event-item {
+        border-left: 4px solid #007bff;
+        padding: 15px;
+        margin-bottom: 10px;
+        background: white;
+        border-radius: 5px;
+    }
+
+        .event-item.past {
+            border-left-color: #6c757d;
+            opacity: 0.8;
+        }
+
+    .rotated {
+        transform: rotate(180deg);
+        transition: transform 0.3s ease;
+    }
+
+    .expand-icon {
+        transition: transform 0.3s ease;
+    }
+
+    .custom-control-label {
+        cursor: pointer;
+    }
+
+    .custom-control-input:disabled ~ .custom-control-label {
+        color: #6c757d;
+        cursor: not-allowed;
+    }
+
+    .card.border-secondary {
+        opacity: 0.7;
+    }
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    $(document).ready(function() {
+        console.log("Participant index page loaded");
+
+        $('.participant-row').click(function() {
+            var participantId = $(this).data('participant-id');
+            var eventsRow = $('#events-' + participantId);
+            var icon = $('#icon-' + participantId);
+
+            if (eventsRow.is(':visible')) {
+                eventsRow.slideUp();
+                icon.removeClass('rotated');
+            } else {
+                eventsRow.slideDown();
+                icon.addClass('rotated');
+                loadEvents(participantId);
+            }
+        });
+
+        setTimeout(function () {
+            $('.alert').fadeOut('slow');
+        }, 5000);
+    });
+
+    function loadEvents(participantId) {
+        var loadingDiv = $('#loading-' + participantId);
+        var eventsContainer = $('#events-container-' + participantId);
+
+        loadingDiv.show();
+        eventsContainer.hide();
+
+        $.ajax({
+            url: '@Url.Action("GetParticipantEvents", "Participant")',
+            type: 'GET',
+            data: { id: participantId },
+            dataType: 'json',
+            success: function(response) {
+                var html = '';
+
+                if (response.success && response.events && response.events.length > 0) {
+                    $.each(response.events, function(index, event) {
+                        var eventDate = new Date(event.EventDate);
+                        var now = new Date();
+                        var isPast = eventDate < now;
+                        var statusClass = isPast ? 'past' : 'future';
+                        var statusIcon = isPast ? 'fa-check-circle' : 'fa-clock';
+                        var statusText = isPast ? 'Tamamlandı' : 'Yaklaşan';
+
+                        html += '<div class="event-item ' + statusClass + '">';
+                        html += '  <div class="d-flex justify-content-between align-items-start">';
+                        html += '    <div class="flex-grow-1">';
+                        html += '      <h6 class="mb-2 text-primary">' + event.Title + '</h6>';
+                        html += '      <p class="mb-2 text-muted">' + event.Description + '</p>';
+                        html += '      <small class="text-muted">';
+                        html += '        <i class="fas fa-map-marker-alt mr-1"></i>' + event.Location;
+                        html += '      </small>';
+                        html += '    </div>';
+                        html += '    <div class="text-right ml-3">';
+                        html += '      <div class="badge badge-' + (isPast ? 'secondary' : 'success') + ' mb-2">';
+                        html += '        <i class="fas ' + statusIcon + ' mr-1"></i>' + statusText;
+                        html += '      </div>';
+                        html += '      <br>';
+                        html += '      <small class="text-muted">' + formatDate(eventDate) + '</small>';
+                        html += '    </div>';
+                        html += '  </div>';
+                        html += '</div>';
+                    });
+                } else {
+                    html = '<div class="no-events text-center">';
+                    html += '  <i class="fas fa-calendar-times fa-3x mb-3 text-muted"></i>';
+                    html += '  <h6 class="text-muted">Etkinlik Kaydı Bulunamadı</h6>';
+                    html += '  <p class="text-muted">' + (response.message || 'Bu katılımcının henüz hiç etkinlik kaydı bulunmamaktadır.') + '</p>';
+                    html += '</div>';
+                }
+
+                eventsContainer.html(html);
+                loadingDiv.hide();
+                eventsContainer.show();
+            },
+            error: function(xhr, status, error) {
+                var errorHtml = '<div class="alert alert-danger">';
+                errorHtml += '  <i class="fas fa-exclamation-circle mr-2"></i>';
+                errorHtml += '  Etkinlikler yüklenirken hata oluştu: ' + error;
+                errorHtml += '</div>';
+
+                eventsContainer.html(errorHtml);
+                loadingDiv.hide();
+                eventsContainer.show();
+            }
+        });
+    }
+
+    function openAddToEventsModal(participantId, participantName) {
+        $('#selectedParticipantName').text(participantName);
+        $('#addToEventsModal').data('participant-id', participantId);
+        $('#selectedEventsInfo').hide();
+        $('#selectedEventsList').empty();
+        $('#confirmAddEvents').prop('disabled', true);
+
+        $('#addToEventsModal').modal('show');
+
+        loadAvailableEvents(participantId);
+    }
+
+    function loadAvailableEvents(participantId) {
+        $('#eventsLoading').show();
+        $('#eventsContainer').hide();
+
+        $.ajax({
+            url: '@Url.Action("GetAvailableEvents", "Participant")',
+            type: 'GET',
+            data: { participantId: participantId },
+            dataType: 'json',
+            success: function(response) {
+                $('#eventsLoading').hide();
+
+                if (response.success && response.events && response.events.length > 0) {
+                    var html = '<div class="row">';
+
+                    $.each(response.events, function(index, event) {
+                        var eventDate = new Date(event.EventDate);
+                        var isPast = eventDate < new Date();
+                        var cardClass = isPast ? 'border-secondary' : 'border-primary';
+                        var badgeClass = isPast ? 'badge-secondary' : 'badge-success';
+                        var statusText = isPast ? 'Geçmiş' : 'Aktif';
+
+                        html += '<div class="col-md-6 mb-3">';
+                        html += '  <div class="card ' + cardClass + '">';
+                        html += '    <div class="card-body">';
+                        html += '      <div class="custom-control custom-checkbox">';
+                        html += '        <input type="checkbox" class="custom-control-input event-checkbox" ';
+                        html += '               id="event-' + event.Id + '" value="' + event.Id + '" ';
+                        html += '               data-title="' + event.Title + '"' + (isPast ? ' disabled' : '') + '>';
+                        html += '        <label class="custom-control-label w-100" for="event-' + event.Id + '">';
+                        html += '          <h6 class="mb-1">' + event.Title + '</h6>';
+                        html += '          <p class="mb-1 text-muted small">' + event.Description + '</p>';
+                        html += '          <small class="text-muted">';
+                        html += '            <i class="fas fa-calendar mr-1"></i>' + formatDate(eventDate) + ' | ';
+                        html += '            <i class="fas fa-map-marker-alt mr-1"></i>' + event.Location;
+                        html += '          </small><br>';
+                        html += '          <span class="badge ' + badgeClass + ' mt-1">' + statusText + '</span>';
+                        html += '        </label>';
+                        html += '      </div>';
+                        html += '    </div>';
+                        html += '  </div>';
+                        html += '</div>';
+                    });
+
+                    html += '</div>';
+                    $('#eventsContainer').html(html).show();
+
+                    $('.event-checkbox').change(function() {
+                        updateSelectedEvents();
+                    });
+
+                } else {
+                    $('#eventsContainer').html(
+                        '<div class="alert alert-info">' +
+                        '<i class="fas fa-info-circle mr-2"></i>' +
+                        (response.message || 'Bu katılımcının eklenebileceği etkinlik bulunmuyor.') +
+                        '</div>'
+                    ).show();
+                }
+            },
+            error: function(xhr, status, error) {
+                $('#eventsLoading').hide();
+                $('#eventsContainer').html(
+                    '<div class="alert alert-danger">' +
+                    '<i class="fas fa-exclamation-circle mr-2"></i>' +
+                    'Etkinlikler yüklenirken hata oluştu: ' + error +
+                    '</div>'
+                ).show();
+            }
+        });
+    }
+
+    function updateSelectedEvents() {
+        var selectedEvents = [];
+        $('.event-checkbox:checked').each(function() {
+            selectedEvents.push({
+                id: $(this).val(),
+                title: $(this).data('title')
+            });
+        });
+
+        if (selectedEvents.length > 0) {
+            var html = '';
+            $.each(selectedEvents, function(index, event) {
+                html += '<li><i class="fas fa-check-circle text-success mr-2"></i>' + event.title + '</li>';
+            });
+
+            $('#selectedEventsList').html(html);
+            $('#selectedEventsInfo').show();
+            $('#confirmAddEvents').prop('disabled', false);
+        } else {
+            $('#selectedEventsInfo').hide();
+            $('#confirmAddEvents').prop('disabled', true);
+        }
+    }
+
+    $('#confirmAddEvents').click(function() {
+        var participantId = $('#addToEventsModal').data('participant-id');
+        var selectedEventIds = [];
+
+        $('.event-checkbox:checked').each(function() {
+            selectedEventIds.push($(this).val());
+        });
+
+        if (selectedEventIds.length > 0) {
+            addParticipantToMultipleEvents(participantId, selectedEventIds);
+        }
+    });
+
+    function addParticipantToMultipleEvents(participantId, eventIds) {
+        $('#confirmAddEvents').prop('disabled', true).html('<i class="fas fa-spinner fa-spin mr-2"></i>Ekleniyor...');
+
+        $.ajax({
+            url: '@Url.Action("AddToMultipleEvents", "Participant")',
+            type: 'POST',
+            data: {
+                participantId: participantId,
+                eventIds: eventIds,
+                __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+            },
+            dataType: 'json',
+            success: function(response) {
+                if (response.success) {
+                    $('#addToEventsModal').modal('hide');
+
+                    var alertHtml = '<div class="alert alert-success alert-dismissible fade show" role="alert">' +
+                                   '<i class="fas fa-check-circle mr-2"></i>' + response.message +
+                                   '<button type="button" class="close" data-dismiss="alert">' +
+                                   '<span>&times;</span></button></div>';
+
+                    $('.container-fluid').prepend(alertHtml);
+
+                    setTimeout(function() {
+                        $('.alert').fadeOut();
+                    }, 5000);
+
+                } else {
+                    alert('Hata: ' + response.message);
+                }
+            },
+            error: function(xhr, status, error) {
+                alert('Ekleme sırasında hata oluştu: ' + error);
+            },
+            complete: function() {
+                $('#confirmAddEvents').prop('disabled', false).html('<i class="fas fa-check mr-2"></i>Seçili Etkinliklere Ekle');
+            }
+        });
+    }
+
+    function formatDate(date) {
+        var options = {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit'
+        };
+        return date.toLocaleDateString('tr-TR', options);
+    }
+</script>
