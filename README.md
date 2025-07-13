@@ -1,14 +1,18 @@
 #  EventManagment  
 
-##  Proje Geliştirme Süreci ve Notlarım
-
-Projenin başlangıçtan bitişe kadar olan geliştirme sürecini, aldığım notları ve çözüm yollarını görmek için [**Proje Dokümantasyonu**](./notesEventManagement.png) klasörüne göz atabilirsiniz. Bu bölümde geliştirme aşamalarında tuttuğum detaylı notlar, öğrendiğim yeni teknolojiler ve projeyi adım adım nasıl geliştirdiğime dair bilgiler yer almaktadır.
 
 **Etkinlik ve Katılımcı Yönetim Uygulaması (.NET MVC)**  
 Bu projede, kurumsal veya sosyal etkinliklerin yönetilebildiği küçük ölçekli bir web uygulaması geliştirdim.
 Kullanıcılar, sistem üzerinden yeni etkinlikler oluşturabiliyor; bu etkinliklere katılımcılar ekleyebiliyor ve ayrıca etkinlikleri listeleyip filtreleyebiliyorlar.
 Ayrıca mevcut etkinlikler üzerinde düzenleme işlemleri de yapılabiliyor.
 Proje, etkinlik ve katılımcı yönetimini pratik hale getirmek amacıyla tasarlanmıştır.
+
+
+#####   NOT :       Bu proje kapsamında, bonus görev olarak belirtilen Authentication ve Authorization yapılandırmaları ile AutoMapper kullanılarak gerçekleştirilecek DTO dönüşümleri gibi bazı ek entegrasyonları, zaman kısıtı nedeniyle tamamlayamadım. Değerlendirme sürecinin adil ilerlemesi adına projemi sizinle paylaştıktan sonra geliştirmeye devam etmedim. Bu durumu belirtmek isterim.
+
+##  Proje Geliştirme Süreci ve Notlarım
+
+Projenin başlangıçtan bitişe kadar olan geliştirme sürecini, aldığım notları ve çözüm yollarını görmek için [**Proje Dokümantasyonu**](./notesEventManagement.png) klasörüne göz atabilirsiniz. Bu bölümde geliştirme aşamalarında tuttuğum detaylı notlar, öğrendiğim yeni teknolojiler ve projeyi adım adım nasıl geliştirdiğime dair bilgiler yer almaktadır.
 
 ##  Görsel İçerik
 ![Ana Sayfa Görseli](assets/homePage.png)
